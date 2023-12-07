@@ -40,7 +40,32 @@ public class MainActivity extends AppCompatActivity {
         });
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if(item.getItemId()==R.id.menu_chat){
+                    getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout,chatFragment).commit();
+                }
+                if(item.getItemId()==R.id.menu_profile){
+                    getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout,profileFragment).commit();
+                }
+                return true;
+            }
+        });
+        bottomNavigationView.setSelectedItemId(R.id.menu_chat);
 
+        getFCMToken();
+
+    }
+
+    void getFCMToken(){
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+                if(task.isSuccessful()){
+                    String token = task.getResult();
+                    FirebaseUtil.currentUserDetails().update("fcmToken",token);
+
+                }
+        });
+    }
 }
 
 
